@@ -9,6 +9,7 @@
   --primary-dark: #65a30d;
   --secondary: #94A3B8;
   --muted: #64748B;
+  --cursor-color: #84cc16;
 }
 
 .dark {
@@ -20,6 +21,7 @@
   --primary-dark: #65a30d;
   --secondary: #94A3B8;
   --muted: #94a3b8;
+  --cursor-color: #84cc16;
 }
 
 @theme inline {
@@ -40,8 +42,42 @@
     --primary-dark: #65a30d;
     --secondary: #94A3B8;
     --muted: #94a3b8;
+    --cursor-color: #84cc16;
   }
 }
+
+/* Cursor personalizado */
+* {
+  cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%2384cc16" stroke="%2365a30d" stroke-width="1.5" d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.35Z"></path></svg>') 0 0, auto;
+}
+
+/* Estilos específicos para elementos interativos */
+a, button, input, textarea, select, [role="button"], label, 
+.language-button, .language-menu button {
+  cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%2384cc16" stroke="%2365a30d" stroke-width="1.5" d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.35Z"></path></svg>') 0 0, pointer;
+}
+
+/* Cursor branco sobre elementos verdes */
+.bg-lime-300, 
+[class*="bg-lime-"], 
+button[type="submit"],
+.bg-\[var\(--primary\)\],
+.dark .bg-\[var\(--primary\)\] {
+  cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" stroke="white" stroke-width="1.5" d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.35Z"></path></svg>') 0 0, auto;
+}
+
+/* Efeito hover nos títulos dos posts */
+article:hover h2 {
+  color: var(--primary);
+  transition: color 0.2s ease;
+}
+
+/* Deixa toda a área do post clicável */
+article {
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
 
 body {
   background: var(--background);

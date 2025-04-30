@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
-import { Moon, Sun } from "phosphor-react";
+import { Moon, Sun, Globe } from "phosphor-react";
 import { Avatar } from "@/components/Avatar";
 import { ScrollIndicator } from "@/components/ScrollIndicator";
 
 export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [language, setLanguage] = useState<"PT-BR" | "EN-US">("PT-BR");
   const desktopScrollRef = useRef<HTMLDivElement>(null);
   const mobileScrollRef = useRef<HTMLDivElement>(null);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 
   // Aplicar o tema ao elemento HTML quando o componente montar ou o tema mudar
   useEffect(() => {
@@ -27,6 +29,26 @@ export default function Home() {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     setIsDarkMode(prefersDark);
   }, []);
+
+  // Fechar o menu de idiomas quando clicar fora dele
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.language-menu') && !target.closest('.language-button')) {
+        setShowLanguageMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const toggleLanguage = (newLanguage: "PT-BR" | "EN-US") => {
+    setLanguage(newLanguage);
+    setShowLanguageMenu(false);
+  };
 
   const posts = [
     {
@@ -177,9 +199,36 @@ export default function Home() {
               <Link href="/suggest" className="text-[var(--foreground)] hover:text-[var(--primary)] text-sm">
                 Sugerir um tema
               </Link>
-              <Link href="/contact" className="text-[var(--foreground)] hover:text-[var(--primary)] text-sm">
-                Fale conosco
-              </Link>
+              
+              {/* Botão de idioma */}
+              <div className="relative">
+                <button 
+                  className="language-button flex items-center gap-1 text-[var(--foreground)] hover:text-[var(--primary)] text-sm"
+                  onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                  aria-label="Alterar idioma"
+                >
+                  <Globe size={16} weight="fill" className="mr-1" />
+                  {language}
+                </button>
+                
+                {showLanguageMenu && (
+                  <div className="language-menu absolute top-full right-0 mt-1 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-md shadow-lg z-50 overflow-hidden">
+                    <button 
+                      className={`w-full text-left px-4 py-2 text-sm ${language === "PT-BR" ? "bg-[var(--primary)] text-white dark:text-gray-900" : "text-[var(--foreground)] hover:bg-[var(--card-border)]"}`}
+                      onClick={() => toggleLanguage("PT-BR")}
+                    >
+                      PT-BR
+                    </button>
+                    <button 
+                      className={`w-full text-left px-4 py-2 text-sm ${language === "EN-US" ? "bg-[var(--primary)] text-white dark:text-gray-900" : "text-[var(--foreground)] hover:bg-[var(--card-border)]"}`}
+                      onClick={() => toggleLanguage("EN-US")}
+                    >
+                      EN-US
+                    </button>
+                  </div>
+                )}
+              </div>
+              
               <Link href="/about" className="text-[var(--foreground)] hover:text-[var(--primary)] text-sm">
                 Sobre
               </Link>
@@ -292,11 +341,29 @@ export default function Home() {
           <Avatar size={24} borderWidth={1.5} />
           <span className="text-xs text-[var(--muted)] mt-1">Home</span>
         </button>
-        <button className="flex flex-col items-center">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          <span className="text-xs text-[var(--muted)] mt-1">Chat</span>
+        <button 
+          className="flex flex-col items-center relative"
+          onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+        >
+          <Globe size={20} weight="fill" />
+          <span className="text-xs text-[var(--muted)] mt-1">{language}</span>
+          
+          {showLanguageMenu && (
+            <div className="language-menu absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-md shadow-lg z-50 overflow-hidden">
+              <button 
+                className={`w-full text-left px-4 py-2 text-sm ${language === "PT-BR" ? "bg-[var(--primary)] text-white dark:text-gray-900" : "text-[var(--foreground)] hover:bg-[var(--card-border)]"}`}
+                onClick={() => toggleLanguage("PT-BR")}
+              >
+                PT-BR
+              </button>
+              <button 
+                className={`w-full text-left px-4 py-2 text-sm ${language === "EN-US" ? "bg-[var(--primary)] text-white dark:text-gray-900" : "text-[var(--foreground)] hover:bg-[var(--card-border)]"}`}
+                onClick={() => toggleLanguage("EN-US")}
+              >
+                EN-US
+              </button>
+            </div>
+          )}
         </button>
         <button className="flex flex-col items-center">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
