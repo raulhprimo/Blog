@@ -21,8 +21,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Blog de Tecnologia",
-  description: "Blog sobre as últimas novidades em tecnologia",
+  title: "Made By Humans",
+  description: "Blog de tecnologia com as últimas novidades e tendências",
 };
 
 export default function RootLayout({

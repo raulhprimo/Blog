@@ -53,52 +53,52 @@ export default function Home() {
   const posts = [
     {
       id: 1,
-      title: "5 Innovative Gadgets You Need to Know About in 2025",
-      excerpt: "Discover the most surprising devices of the year that promise to make your routine easier.",
+      title: "5 Gadgets inovadores que você precisa conhecer em 2025",
+      excerpt: "Descubra os dispositivos mais surpreendentes do ano que prometem tornar seu roteiro mais fácil.",
       date: "5 de Março, 2025",
-      author: "Username",
+      author: "Raul Primo",
     },
     {
       id: 2,
       title: "Os 10 Melhores Aplicativos para Aumentar Sua Produtividade",
       date: "5 de Março, 2025",
-      author: "Username",
+      author: "Raul Primo",
     },
     {
       id: 3,
       title: "Como a Inteligência Artificial Está Revolucionando o Mercado de Trabalho",
       date: "17 de Março, 2025",
-      author: "Username",
+      author: "Raul Primo",
     },
     {
       id: 4,
       title: "Blockchain Além das Criptomoedas: Como Esta Tecnologia Está Mudando o Mundo",
       date: "19 de Março, 2025",
-      author: "Username",
+      author: "Raul Primo",
     },
     {
       id: 5,
       title: "Computação Quântica: O Próximo Salto na Tecnologia",
       date: "23 de Março, 2025",
-      author: "Username",
+      author: "Raul Primo",
     },
     {
       id: 6,
       title: "Realidade Aumentada vs. Realidade Virtual: Qual é o Futuro do Entretenimento?",
       date: "27 de Março, 2025",
-      author: "Username",
+      author: "Raul Primo",
     },
     {
       id: 7,
       title: "Carros Autônomos: Quando Não Precisaremos Mais Dirigir?",
       date: "2 de Fevereiro, 2025",
-      author: "Username",
+      author: "Raul Primo",
     },
     {
       id: 8,
       title: "A Ascensão do 6G: O que Esperar da Próxima Geração de Internet Móvel?",
       date: "7 de Fevereiro, 2025",
-      author: "Username",
+      author: "Raul Primo",
     }
   ];
 
@@ -135,14 +135,14 @@ export default function Home() {
           </div>
           
           {/* Conteúdo do Post - Alinhado na parte inferior */}
-          <div className="flex flex-col justify-end h-full p-8">
+          <Link href="/post/1" className="flex flex-col justify-end h-full p-8">
             <h1 className="text-[1.75rem] leading-tight font-bold text-[#333] dark:text-[#111] mb-2">
               {posts[0].title}
             </h1>
             <p className="text-[0.95rem] text-[#444] dark:text-[#222] leading-snug">
               {posts[0].excerpt}
             </p>
-          </div>
+          </Link>
         </div>
         
         {/* Newsletter */}
@@ -192,8 +192,7 @@ export default function Home() {
         <div className="bg-[var(--secondary)] dark:bg-[var(--card-bg)] py-3 px-6 rounded-md mb-4 border border-[var(--card-border)]">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center gap-2 text-base font-bold text-[var(--foreground)]">
-              <Avatar size={38} borderWidth={2} />
-              <span>Blog de Tecnologia</span>
+              <span>MBH</span>
             </Link>
             <div className="flex items-center space-x-6">
               <Link href="/suggest" className="text-[var(--foreground)] hover:text-[var(--primary)] text-sm">
@@ -255,14 +254,16 @@ export default function Home() {
           >
             <div className="space-y-6 p-4">
               {posts.slice(1).map((post) => (
-                <article key={post.id} className="border-b border-[var(--card-border)] pb-5 last:border-0">
-                  <h2 className="text-lg font-semibold text-[var(--foreground)] mb-1">
-                    {post.title}
-                  </h2>
-                  <div className="text-xs text-[var(--muted)]">
-                    Por {post.author} | {post.date}
-                  </div>
-                </article>
+                <Link href={`/post/${post.id}`} key={post.id}>
+                  <article className="border-b border-[var(--card-border)] pb-5 last:border-0">
+                    <h2 className="text-lg font-semibold text-[var(--foreground)] mb-1">
+                      {post.title}
+                    </h2>
+                    <div className="text-xs text-[var(--muted)]">
+                      Por {post.author} | {post.date}
+                    </div>
+                  </article>
+                </Link>
               ))}
             </div>
           </div>
@@ -303,14 +304,14 @@ export default function Home() {
         </div>
         
         {/* Conteúdo do Post - Alinhado na parte inferior */}
-        <div className="flex flex-col justify-end h-64 p-6">
+        <Link href="/post/1" className="flex flex-col justify-end h-64 p-6">
           <h1 className="text-xl leading-tight font-bold text-[#333] dark:text-[#111] mb-1">
             {posts[0].title}
           </h1>
           <p className="text-sm text-[#444] dark:text-[#222] leading-snug">
             {posts[0].excerpt}
           </p>
-        </div>
+        </Link>
       </div>
       
       {/* Lista de Posts com scroll */}
@@ -321,14 +322,16 @@ export default function Home() {
         >
           <div className="space-y-4 p-4">
             {posts.slice(1).map((post) => (
-              <article key={post.id} className="border-b border-[var(--card-border)] pb-4 last:border-0">
-                <h2 className="text-base font-semibold text-[var(--foreground)] mb-1">
-                  {post.title}
-                </h2>
-                <div className="text-xs text-[var(--muted)]">
-                  Por {post.author} | {post.date}
-                </div>
-              </article>
+              <Link href={`/post/${post.id}`} key={post.id}>
+                <article className="border-b border-[var(--card-border)] pb-4 last:border-0">
+                  <h2 className="text-base font-semibold text-[var(--foreground)] mb-1">
+                    {post.title}
+                  </h2>
+                  <div className="text-xs text-[var(--muted)]">
+                    Por {post.author} | {post.date}
+                  </div>
+                </article>
+              </Link>
             ))}
           </div>
         </div>
