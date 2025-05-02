@@ -1,36 +1,16 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { Post } from '@/types/post';
+import { getPostById } from '@/utils/posts';
 
-const postsDirectory = path.join(process.cwd(), 'src/content/posts');
+type PageParams = {
+  params: Promise<{ id: string }>;
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(_request: Request, { params }: PageParams) {
   try {
-    const fileNames = fs.readdirSync(postsDirectory);
-    const post = fileNames
-      .filter(fileName => fileName.endsWith('.mdx'))
-      .map(fileName => {
-        // Procura por qualquer arquivo que contenha o ID no nome
-        const fileContent = fs.readFileSync(path.join(postsDirectory, fileName), 'utf8');
-        const { data, content } = matter(fileContent);
-        const fileId = fileName.includes('gadgets-inovadores') ? '1' : 
-                      fileName.includes('apps-produtividade') ? '2' : null;
-        
-        if (fileId === params.id) {
-          return {
-            id: parseInt(fileId),
-            content,
-            ...data,
-          } as Post;
-        }
-        return null;
-      })
-      .find(post => post !== null);
+    const { id } = await params;
+    const numericId = parseInt(id);
+    const post = await getPostById(numericId);
 
     if (!post) {
       return NextResponse.json(

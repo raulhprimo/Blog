@@ -5,13 +5,44 @@ import { useEffect, useState, useRef } from "react";
 import { Moon, Sun, Globe } from "phosphor-react";
 import { Avatar } from "@/components/Avatar";
 import { ScrollIndicator } from "@/components/ScrollIndicator";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { PostLoadingEffect } from "@/components/PostLoadingEffect";
+import { Post } from "@/types/post";
 
 export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [language, setLanguage] = useState<"PT-BR" | "EN-US">("PT-BR");
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(true);
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
   const mobileScrollRef = useRef<HTMLDivElement>(null);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+
+  useEffect(() => {
+    // Timer para remover a tela de loading após a animação
+    const loadingTimer = setTimeout(() => {
+      setShowLoadingScreen(false);
+    }, 2000);
+
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch('/api/posts');
+        const data = await response.json();
+        setPosts(data);
+        // Adiciona um delay para mostrar o efeito de loading
+        setTimeout(() => {
+          setIsLoadingPosts(false);
+        }, 1500);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        setIsLoadingPosts(false);
+      }
+    };
+
+    fetchPosts();
+    return () => clearTimeout(loadingTimer);
+  }, []);
 
   // Aplicar o tema ao elemento HTML quando o componente montar ou o tema mudar
   useEffect(() => {
@@ -50,58 +81,6 @@ export default function Home() {
     setShowLanguageMenu(false);
   };
 
-  const posts = [
-    {
-      id: 1,
-      title: "5 Gadgets inovadores que você precisa conhecer em 2025",
-      excerpt: "Descubra os dispositivos mais surpreendentes do ano que prometem tornar seu roteiro mais fácil.",
-      date: "5 de Março, 2025",
-      author: "Raul Primo",
-    },
-    {
-      id: 2,
-      title: "Os 10 Melhores Aplicativos para Aumentar Sua Produtividade",
-      date: "5 de Março, 2025",
-      author: "Raul Primo",
-    },
-    {
-      id: 3,
-      title: "Como a Inteligência Artificial Está Revolucionando o Mercado de Trabalho",
-      date: "17 de Março, 2025",
-      author: "Raul Primo",
-    },
-    {
-      id: 4,
-      title: "Blockchain Além das Criptomoedas: Como Esta Tecnologia Está Mudando o Mundo",
-      date: "19 de Março, 2025",
-      author: "Raul Primo",
-    },
-    {
-      id: 5,
-      title: "Computação Quântica: O Próximo Salto na Tecnologia",
-      date: "23 de Março, 2025",
-      author: "Raul Primo",
-    },
-    {
-      id: 6,
-      title: "Realidade Aumentada vs. Realidade Virtual: Qual é o Futuro do Entretenimento?",
-      date: "27 de Março, 2025",
-      author: "Raul Primo",
-    },
-    {
-      id: 7,
-      title: "Carros Autônomos: Quando Não Precisaremos Mais Dirigir?",
-      date: "2 de Fevereiro, 2025",
-      author: "Raul Primo",
-    },
-    {
-      id: 8,
-      title: "A Ascensão do 6G: O que Esperar da Próxima Geração de Internet Móvel?",
-      date: "7 de Fevereiro, 2025",
-      author: "Raul Primo",
-    }
-  ];
-
   // Desktop layout
   const DesktopLayout = () => (
     <div className="flex h-full w-full">
@@ -137,10 +116,10 @@ export default function Home() {
           {/* Conteúdo do Post - Alinhado na parte inferior */}
           <Link href="/post/1" className="flex flex-col justify-end h-full p-8">
             <h1 className="text-[1.75rem] leading-tight font-bold text-[#333] dark:text-[#111] mb-2">
-              {posts[0].title}
+              {posts[0]?.title}
             </h1>
             <p className="text-[0.95rem] text-[#444] dark:text-[#222] leading-snug">
-              {posts[0].excerpt}
+              {posts[0]?.excerpt}
             </p>
           </Link>
         </div>
@@ -195,9 +174,6 @@ export default function Home() {
               <span>MBH</span>
             </Link>
             <div className="flex items-center space-x-6">
-              <Link href="/suggest" className="text-[var(--foreground)] hover:text-[var(--primary)] text-sm">
-                Sugerir um tema
-              </Link>
               
               {/* Botão de idioma */}
               <div className="relative">
@@ -306,10 +282,10 @@ export default function Home() {
         {/* Conteúdo do Post - Alinhado na parte inferior */}
         <Link href="/post/1" className="flex flex-col justify-end h-64 p-6">
           <h1 className="text-xl leading-tight font-bold text-[#333] dark:text-[#111] mb-1">
-            {posts[0].title}
+            {posts[0]?.title}
           </h1>
           <p className="text-sm text-[#444] dark:text-[#222] leading-snug">
-            {posts[0].excerpt}
+            {posts[0]?.excerpt}
           </p>
         </Link>
       </div>
@@ -396,14 +372,18 @@ export default function Home() {
   );
 
   return (
-    <div className="h-screen bg-[var(--background)] p-4 transition-colors">
-      {/* Desktop layout for large screens, mobile layout for small screens */}
-      <div className="hidden md:block h-full">
-        <DesktopLayout />
+    <>
+      {showLoadingScreen && <LoadingScreen />}
+      <div className={`h-screen bg-[var(--background)] p-4 transition-all duration-500 ${showLoadingScreen ? 'blur-sm' : 'blur-none'}`}>
+        <div className="hidden md:block h-full relative">
+          {isLoadingPosts && <PostLoadingEffect />}
+          <DesktopLayout />
+        </div>
+        <div className="block md:hidden h-full relative">
+          {isLoadingPosts && <PostLoadingEffect />}
+          <MobileLayout />
+        </div>
       </div>
-      <div className="block md:hidden h-full">
-        <MobileLayout />
-      </div>
-    </div>
+    </>
   );
 }

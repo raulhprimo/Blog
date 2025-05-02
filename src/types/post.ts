@@ -1,11 +1,11 @@
 export interface Post {
   id: number;
   title: string;
+  excerpt: string;
   content: string;
-  excerpt?: string;
   date: string;
   author: string;
-  readTime?: string;
-  category?: string;
-  tags?: string[];
+  category: string;
+  tags: string[];
+  readTime: string;
 } 
